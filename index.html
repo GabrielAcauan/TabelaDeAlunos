@@ -3,95 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabela Dinâmica de Alunos</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js" defer></script>
-    <script src="script.js" defer></script>
-    <link rel="stylesheet" href="style.css">
+    <title>Página de Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f6f9;
+        }
+
+        #loginForm {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #loginForm h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #loginForm input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        #loginForm button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #loginForm button:hover {
+            background-color: #0056b3;
+        }
+
+        #errorMessage {
+            color: red;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Tabela Dinâmica de Alunos</h1>
+    <div id="loginForm">
+        <h2>Login</h2>
+        <div id="errorMessage">Usuário ou senha inválidos!</div>
+        <input type="text" id="username" placeholder="Usuário" required>
+        <input type="password" id="password" placeholder="Senha" required>
+        <button type="button" onclick="login()">Entrar</button>
+    </div>
 
-    <form id="formAdicionar">
-        <label for="escola">Escola:</label>
-        <input type="text" id="escola" name="escola" required>
-        
-        <label for="eja">EJA:</label>
-        <input type="checkbox" id="eja" name="eja">
-        
-        <label for="serie">Série:</label>
-        <select id="serie" name="serie" required>
-            <option value="Pré 1">Pré 1</option>
-            <option value="Pré 2">Pré 2</option>
-            <option value="1ª">1ª</option>
-            <option value="2ª">2ª</option>
-            <option value="3ª">3ª</option>
-            <option value="4ª">4ª</option>
-            <option value="5ª">5ª</option>
-            <option value="6ª">6ª</option>
-            <option value="7ª">7ª</option>
-            <option value="8ª">8ª</option>
-            <option value="9ª">9ª</option>
-        </select>
-        
-        <label for="turma">Turma:</label>
-        <input type="text" id="turma" name="turma" required>
-        
-        <label for="turno">Turno:</label>
-        <select id="turno" name="turno" required>
-            <option value="M">Manhã</option>
-            <option value="T">Tarde</option>
-            <option value="N">Noite</option>
-            <option value="I">Integral</option>
-        </select>
-        
-        <label for="quantidade">Quantidade de Alunos:</label>
-        <input type="number" id="quantidade" name="quantidade" required>
-        
-        <button type="submit">Adicionar</button>
-    </form>
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+    
+            // Defina os usuários e senhas válidos
+            const validUsername = 'admin';
+            const validPassword = '12345';
+    
+            if (username === validUsername && password === validPassword) {
+                window.location.href = 'tabelaAlunos.html'; // Redireciona para a tabela
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+            }
 
-    <button id="printButton" onclick="window.print()">Imprimir Tabela</button>
-    <button id="exportExcelButton" onclick="exportTableToExcel()">Exportar para Excel</button>
+        }
+    </script>
+    
 
-    <table id="alunosTable">
-        <thead>
-            <tr>
-                <th>Escola</th>
-                <th>Pré 1</th>
-                <th>Pré 2</th>
-                <th>1ª</th>
-                <th>2ª</th>
-                <th>3ª</th>
-                <th>4ª</th>
-                <th>5ª</th>
-                <th>6ª</th>
-                <th>7ª</th>
-                <th>8ª</th>
-                <th>9ª</th>
-                <th>EJA</th>
-                <th>Total por Escola</th>
-                <th></th> <!-- Coluna para o botão "x" -->
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td>Total de Alunos (E.F.)</td>
-                <td colspan="12" id="totalAlunos">0</td>
-            </tr>
-            <tr>
-                <td>Total de Alunos (EJA)</td>
-                <td colspan="12" id="totalEJA">0</td>
-            </tr>
-            <tr>
-                <td>Total Geral de Alunos</td>
-                <td colspan="12" id="totalGeral">0</td>
-            </tr>
-        </tfoot>
-    </table>
-
-    <script src="script.js"></script>
 </body>
 </html>
