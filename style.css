@@ -1,0 +1,157 @@
+/* Estilos para a visualização na tela */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+h1 {
+    color: #333;
+    margin-top: 20px;
+}
+
+#formAdicionar {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 20px;
+}
+
+#formAdicionar label {
+    font-weight: bold;
+    color: #555;
+}
+
+#formAdicionar input, #formAdicionar select, #formAdicionar button {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+#formAdicionar button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+#formAdicionar button:hover {
+    background-color: #218838;
+}
+
+table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+}
+
+td {
+    padding: 12px;
+    text-align: left;
+}
+
+.delete-btn {
+    background-color: transparent;
+    border: none;
+    color: red;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+tfoot td {
+    font-weight: bold;
+    background-color: #f1f1f1;
+}
+
+#totalAlunos, #totalEJA, #totalGeral {
+    color: #007bff;
+    font-size: 16px;
+}
+
+button {
+    cursor: pointer;
+}
+
+#printButton, #exportExcelButton {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+#printButton:hover, #exportExcelButton:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    #formAdicionar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #formAdicionar input, #formAdicionar select, #formAdicionar button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    table, th, td {
+        font-size: 12px;
+    }
+}
+
+/* Estilos específicos para impressão */
+@media print {
+    body {
+        background-color: #fff;
+    }
+
+    #formAdicionar, h1, #printButton, #exportExcelButton {
+        display: none; /* Oculta o formulário, título e botões na impressão */
+    }
+
+    table {
+        font-size: 12px; /* Reduz o tamanho da fonte para caber na página */
+    }
+
+    th, td {
+        padding: 8px; /* Reduz o padding para economizar espaço */
+    }
+
+    @page {
+        size: landscape; /* Configura o modo paisagem */
+    }
+}

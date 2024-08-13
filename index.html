@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Dinâmica de Alunos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js" defer></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Tabela Dinâmica de Alunos</h1>
+
+    <form id="formAdicionar">
+        <label for="escola">Escola:</label>
+        <input type="text" id="escola" name="escola" required>
+        
+        <label for="eja">EJA:</label>
+        <input type="checkbox" id="eja" name="eja">
+        
+        <label for="serie">Série:</label>
+        <select id="serie" name="serie" required>
+            <option value="Pré 1">Pré 1</option>
+            <option value="Pré 2">Pré 2</option>
+            <option value="1ª">1ª</option>
+            <option value="2ª">2ª</option>
+            <option value="3ª">3ª</option>
+            <option value="4ª">4ª</option>
+            <option value="5ª">5ª</option>
+            <option value="6ª">6ª</option>
+            <option value="7ª">7ª</option>
+            <option value="8ª">8ª</option>
+            <option value="9ª">9ª</option>
+        </select>
+        
+        <label for="turma">Turma:</label>
+        <input type="text" id="turma" name="turma" required>
+        
+        <label for="turno">Turno:</label>
+        <select id="turno" name="turno" required>
+            <option value="M">Manhã</option>
+            <option value="T">Tarde</option>
+            <option value="N">Noite</option>
+            <option value="I">Integral</option>
+        </select>
+        
+        <label for="quantidade">Quantidade de Alunos:</label>
+        <input type="number" id="quantidade" name="quantidade" required>
+        
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <button id="printButton" onclick="window.print()">Imprimir Tabela</button>
+    <button id="exportExcelButton" onclick="exportTableToExcel()">Exportar para Excel</button>
+
+    <table id="alunosTable">
+        <thead>
+            <tr>
+                <th>Escola</th>
+                <th>Pré 1</th>
+                <th>Pré 2</th>
+                <th>1ª</th>
+                <th>2ª</th>
+                <th>3ª</th>
+                <th>4ª</th>
+                <th>5ª</th>
+                <th>6ª</th>
+                <th>7ª</th>
+                <th>8ª</th>
+                <th>9ª</th>
+                <th>EJA</th>
+                <th>Total por Escola</th>
+                <th></th> <!-- Coluna para o botão "x" -->
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Total de Alunos (E.F.)</td>
+                <td colspan="12" id="totalAlunos">0</td>
+            </tr>
+            <tr>
+                <td>Total de Alunos (EJA)</td>
+                <td colspan="12" id="totalEJA">0</td>
+            </tr>
+            <tr>
+                <td>Total Geral de Alunos</td>
+                <td colspan="12" id="totalGeral">0</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script src="script.js"></script>
+</body>
+</html>
