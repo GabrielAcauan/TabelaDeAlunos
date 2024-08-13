@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Dinâmica de Alunos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        /* Estilos para a visualização na tela */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        #formAdicionar {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        #formAdicionar label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        #formAdicionar input, #formAdicionar select, #formAdicionar button {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        #formAdicionar button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        #formAdicionar button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .delete-btn {
+            background-color: transparent;
+            border: none;
+            color: red;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        tfoot td {
+            font-weight: bold;
+            background-color: #f1f1f1;
+        }
+
+        #totalAlunos, #totalEJA, #totalGeral {
+            color: #007bff;
+            font-size: 16px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        #printButton, #exportExcelButton {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        #printButton:hover, #exportExcelButton:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            #formAdicionar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #formAdicionar input, #formAdicionar select, #formAdicionar button {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            table, th, td {
+                font-size: 12px;
+            }
+        }
+
+        /* Estilos específicos para impressão */
+        @media print {
+            body {
+                background-color: #fff;
+            }
+
+            #formAdicionar, h1, #printButton, #exportExcelButton {
+                display: none; /* Oculta o formulário, título e botões na impressão */
+            }
+
+            table {
+                font-size: 12px; /* Reduz o tamanho da fonte para caber na página */
+            }
+
+            th, td {
+                padding: 8px; /* Reduz o padding para economizar espaço */
+            }
+
+            @page {
+                size: landscape; /* Configura o modo paisagem */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tabela Dinâmica de Alunos</h1>
+
+    <form id="formAdicionar">
+        <label for="escola">Escola:</label>
+        <input type="text" id="escola" name="escola" required>
+        
+        <label for="eja">EJA:</label>
+        <input type="checkbox" id="eja" name="eja">
+        
+        <label for="serie">Série:</label>
+        <select id="serie" name="serie" required>
+            <option value="Pré 1">Pré 1</option>
+            <option value="Pré 2">Pré 2</option>
+            <option value="1ª">1ª</option>
+            <option value="2ª">2ª</option>
+            <option value="3ª">3ª</option>
+            <option value="4ª">4ª</option>
+            <option value="5ª">5ª</option>
+            <option value="6ª">6ª</option>
+            <option value="7ª">7ª</option>
+            <option value="8ª">8ª</option>
+            <option value="9ª">9ª</option>
+        </select>
+        
+        <label for="turma">Turma:</label>
+        <input type="text" id="turma" name="turma" required>
+        
+        <label for="turno">Turno:</label>
+        <select id="turno" name="turno" required>
+            <option value="M">Manhã</option>
+            <option value="T">Tarde</option>
+            <option value="N">Noite</option>
+            <option value="I">Integral</option>
+        </select>
+        
+        <label for="quantidade">Quantidade de Alunos:</label>
+        <input type="number" id="quantidade" name="quantidade" required>
+        
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <button id="printButton" onclick="window.print()">Imprimir Tabela</button>
+    <button id="exportExcelButton" onclick="exportTableToExcel()">Exportar para Excel</button>
+
+    <table id="alunosTable">
+        <thead>
+            <tr>
+                <th>Escola</th>
+                <th>Pré 1</th>
+                <th>Pré 2</th>
+                <th>1ª</th>
+                <th>2ª</th>
+                <th>3ª</th>
+                <th>4ª</th>
+                <th>5ª</th>
+                <th>6ª</th>
+                <th>7ª</th>
+                <th>8ª</th>
+                <th>9ª</th>
+                <th>EJA</th>
+                <th>Total por Escola</th>
+                <th></th> <!-- Coluna para o botão "x" -->
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Total de Alunos (E.F.)</td>
+                <td colspan="12" id="totalAlunos">0</td>
+            </tr>
+            <tr>
+                <td>Total de Alunos (EJA)</td>
+                <td colspan="12" id="totalEJA">0</td>
+            </tr>
+            <tr>
+                <td>Total Geral de Alunos</td>
+                <td colspan="12" id="totalGeral">0</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        const series = ["Pré 1", "Pré 2", "1ª", "2ª", "3ª", "4ª", "5ª", "6ª", "7ª", "8ª", "9ª", "EJA"];
+
+        function carregarTabela() {
+            const tableBody = document.getElementById('alunosTable').getElementsByTagName('tbody')[0];
+            const data = JSON.parse(localStorage.getItem('alunosData')) || [];
+            
+            data.forEach(rowData => {
+                const newRow = tableBody.insertRow();
+                newRow.insertCell(0).textContent = rowData.escola;
+
+                let totalPorEscola = 0;
+                series.forEach(serie => {
+                    const cell = newRow.insertCell();
+                    const cellContent = rowData[serie] ? rowData[serie].split('\n').join('<br>') : '';
+                    cell.innerHTML = cellContent;
+                    if (rowData[serie]) {
+                        const quantidadeMatches = rowData[serie].match(/- (\d+)/g);
+                        if (quantidadeMatches) {
+                            quantidadeMatches.forEach(match => {
+                                totalPorEscola += parseInt(match.replace('- ', ''));
+                            });
+                        }
+                    }
+                });
+
+                const totalCell = newRow.insertCell();
+                totalCell.textContent = totalPorEscola;
+
+                const deleteCell = newRow.insertCell();
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'x';
+                deleteButton.className = 'delete-btn';
+                deleteButton.onclick = () => {
+                    const rowIndex = newRow.rowIndex - 1; // Ajusta para ignorar o cabeçalho
+                    data.splice(rowIndex, 1);
+                    localStorage.setItem('alunosData', JSON.stringify(data));
+                    location.reload();
+                };
+                deleteCell.appendChild(deleteButton);
+            });
+
+            atualizarTotais(data);
+        }
+
+        function atualizarTotais(data) {
+            let totalAlunos = 0;
+            let totalEJA = 0;
+
+            data.forEach(rowData => {
+                series.forEach(serie => {
+                    if (rowData[serie]) {
+                        const quantidadeMatches = rowData[serie].match(/- (\d+)/g);
+                        if (quantidadeMatches) {
+                            quantidadeMatches.forEach(match => {
+                                const quantidade = parseInt(match.replace('- ', ''));
+                                if (serie === "EJA") {
+                                    totalEJA += quantidade;
+                                } else {
+                                    totalAlunos += quantidade;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            document.getElementById('totalAlunos').textContent = totalAlunos;
+            document.getElementById('totalEJA').textContent = totalEJA;
+            document.getElementById('totalGeral').textContent = totalAlunos + totalEJA;
+        }
+
+        function salvarTabela(data) {
+            localStorage.setItem('alunosData', JSON.stringify(data));
+        }
+
+        document.getElementById('formAdicionar').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            let escola = document.getElementById('escola').value;
+            const ejaChecked = document.getElementById('eja').checked;
+            if (ejaChecked) {
+                escola += " (EJA)";
+            }
+            const serie = document.getElementById('serie').value;
+            const turma = document.getElementById('turma').value;
+            const turno = document.getElementById('turno').value;
+            const quantidade = parseInt(document.getElementById('quantidade').value);
+
+            const data = JSON.parse(localStorage.getItem('alunosData')) || [];
+
+            let escolaExistente = data.find(item => item.escola === escola);
+            if (!escolaExistente) {
+                escolaExistente = { escola };
+                data.push(escolaExistente);
+            }
+
+            const info = turno === 'I' ? `(Integral) - ${quantidade}` : `${turma}(${turno}) - ${quantidade}`;
+            if (escolaExistente[serie]) {
+                escolaExistente[serie] += `\n${info}`;
+            } else {
+                escolaExistente[serie] = info;
+            }
+
+            salvarTabela(data);
+            location.reload();
+        });
+
+        document.getElementById('turno').addEventListener('change', function() {
+            const turmaField = document.getElementById('turma');
+            const ejaCheckbox = document.getElementById('eja');
+            if (this.value === 'I') {
+                turmaField.disabled = true;
+                turmaField.value = ''; // Limpa o valor do campo de turma
+            } else {
+                turmaField.disabled = false;
+            }
+
+            // Desabilita o campo "EJA" se o turno não for "Noite"
+            if (this.value !== 'N') {
+                ejaCheckbox.checked = false;
+                ejaCheckbox.disabled = true;
+            } else {
+                ejaCheckbox.disabled = false;
+            }
+        });
+
+        function exportTableToExcel() {
+            const table = document.getElementById('alunosTable');
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+            XLSX.writeFile(wb, 'tabela_alunos.xlsx');
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarTabela);
+    </script>
+
+</body>
+</html>
+
